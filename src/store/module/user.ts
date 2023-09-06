@@ -7,19 +7,11 @@ const loginStorage = new Storage<LoginState>()
 export const userInfoInit = (): UserInfo => {
     return {
         avatar: '',
-        birthday: 0,
-        company_name: '',
-        department: '',
         email: '',
-        employ_type: 0,
-        entry_time: 0,
         gender: 0,
         mobile: '',
         name: '',
-        read_status: '',
-        show_missing_tab: false,
         uid: 0,
-        work_place: '',
         roles: []
     }
 }

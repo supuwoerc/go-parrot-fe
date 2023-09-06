@@ -1,23 +1,7 @@
 import { CustomRouteObject, routes } from '@/routes/config'
-import { atom, selector } from 'recoil'
+import { selector } from 'recoil'
 import { user } from '..'
 import { cloneDeep } from 'lodash'
-
-export const appEnumInit = (): AppEnum => {
-    return {
-        manage_system: []
-    }
-}
-
-export const appEnum = atom<AppEnum>({
-    key: 'appEnum',
-    default: appEnumInit()
-})
-
-export const currentWorkspace = atom<number | null>({
-    key: 'currentWorkspace',
-    default: null
-})
 
 // 路由的过滤方法
 function routesFilter(
