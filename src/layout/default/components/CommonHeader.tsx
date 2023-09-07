@@ -46,7 +46,7 @@ const UserCenter: React.FC = () => {
     return (
         <FlexBox>
             <Space>
-                <Avatar size={36} src={<img alt="avatar" />} />
+                <Avatar size={36} icon={<UserOutlined />} />
                 <Dropdown
                     menu={{ items }}
                     autoAdjustOverflow
@@ -64,6 +64,7 @@ const UserCenter: React.FC = () => {
                             cursor: pointer;
                         `}
                     >
+                        <span>测试用户</span>
                         <DownOutlined />
                     </div>
                 </Dropdown>

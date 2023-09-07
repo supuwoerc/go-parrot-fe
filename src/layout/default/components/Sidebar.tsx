@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Space, Image, Menu } from 'antd'
-import logo from '@/assets/layout/default/logo.png'
+import { Space, Menu } from 'antd'
 import React from 'react'
 import Sider from 'antd/es/layout/Sider'
 import { useRecoilValue } from 'recoil'
@@ -35,11 +34,7 @@ export const SidebarTitle: React.FC<SiderbarTitleProps> = ({ collapsed }) => {
     return (
         <WrapDiv>
             <Space size={12}>
-                <Image
-                    width={!collapsed ? 78 : 66}
-                    preview={false}
-                    src={logo}
-                />
+                <span>Parrot</span>
                 {!collapsed && <span>{appName}</span>}
             </Space>
         </WrapDiv>
