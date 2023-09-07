@@ -59,7 +59,12 @@ const DefaultLayout: React.FC = () => {
                                 classNames="fade-slide"
                                 nodeRef={nodeRef}
                             >
-                                <div ref={nodeRef}>
+                                <div
+                                    css={css`
+                                        height: 100%;
+                                    `}
+                                    ref={nodeRef}
+                                >
                                     <Outlet />
                                 </div>
                             </CSSTransition>
