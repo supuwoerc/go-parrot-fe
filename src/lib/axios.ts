@@ -4,6 +4,7 @@ import responseInterceptors from './interceptors/response'
 import { getAppEnv } from '@/utils'
 import { Storage } from '@supuwoerc/utils'
 import queryString from './query-string'
+import config from '@/config'
 const [requestResolve, requestReject] = requestInterceptors
 const [responseResolve, responseReject] = responseInterceptors
 interface WrapAxionsInstance extends AxiosInstance {
@@ -15,6 +16,8 @@ interface WrapAxionsInstance extends AxiosInstance {
         extraConfig?: any
     ): Promise<T>
 }
+console.log(config)
+
 const setupInterceptors = (axios: AxiosInstance) => {
     axios.interceptors.request.use(requestResolve, requestReject)
     axios.interceptors.response.use(responseResolve, responseReject)
@@ -26,7 +29,7 @@ const createRequest = (): WrapAxionsInstance => {
     const headers: Record<string, any> = {}
     headers['token'] = loginStorage.get(tokenKey) || ''
     const clientRequest = axios.create({
-        baseURL: './',
+        baseURL: config.config.baseURL,
         headers,
         paramsSerializer: function (params) {
             return queryString.stringify(params)

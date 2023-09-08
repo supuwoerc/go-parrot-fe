@@ -8,7 +8,7 @@
         "preinstall": "npx only-allow pnpm",
         "prepare": "husky install",
         "dev": "vite",
-        "build": "tsc && vite build --mode online",
+        "build": "tsc && vite build --mode production",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "lint:fix": "eslint src --ext ts,tsx --fix",
         "lint:lint-staged": "lint-staged",
