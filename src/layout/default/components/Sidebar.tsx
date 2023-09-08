@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Space, Menu } from 'antd'
+import { Space, Menu, Image } from 'antd'
 import React from 'react'
 import Sider from 'antd/es/layout/Sider'
 import { useRecoilValue } from 'recoil'
@@ -7,6 +7,8 @@ import { siderbar } from '@/store'
 import useCurrentMenu from '@/hooks/useCurrentMenu'
 import { useNavigate } from 'react-router-dom'
 import { getParents } from '@supuwoerc/utils'
+import { getAppEnv } from '@/utils'
+import logo from '@/assets/logo.png'
 
 const WrapDiv = styled.div`
     color: '#ffffff';
@@ -29,12 +31,12 @@ interface SiderbarTitleProps {
     collapsed: boolean
 }
 
-const appName = import.meta.env.VITE_APP_TITLE
 export const SidebarTitle: React.FC<SiderbarTitleProps> = ({ collapsed }) => {
+    const appName = getAppEnv().VITE_APP_NAME
     return (
         <WrapDiv>
             <Space size={12}>
-                <span>Parrot</span>
+                <Image width={42} src={logo} preview={false} />
                 {!collapsed && <span>{appName}</span>}
             </Space>
         </WrapDiv>
