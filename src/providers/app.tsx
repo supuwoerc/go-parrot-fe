@@ -1,4 +1,4 @@
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, App } from 'antd'
 import React from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { RecoilRoot } from 'recoil'
@@ -9,6 +9,7 @@ import zhCN from 'antd/locale/zh_CN'
 import 'antd/dist/reset.css'
 import { errorTipsClass } from '@/style/error'
 import pageError from '@/assets/2.png'
+import Message from './message'
 interface ErrorFallbackProps {
     error: Error
     resetErrorBoundary: () => void
@@ -31,7 +32,10 @@ export const AppProvider: React.FC<BasicFC> = ({ children }) => {
             <RecoilRoot>
                 <QueryClientProvider client={queryClient}>
                     <ConfigProvider locale={zhCN}>
-                        <BrowserRouter>{children}</BrowserRouter>
+                        <App style={{ height: '100%' }}>
+                            <Message />
+                            <BrowserRouter>{children}</BrowserRouter>
+                        </App>
                     </ConfigProvider>
                 </QueryClientProvider>
             </RecoilRoot>

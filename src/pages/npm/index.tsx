@@ -7,13 +7,14 @@ interface NpmStatProps {
     packageName: string
 }
 
-const NpmStat: React.FC<NpmStatProps> = ({ packageName }) => {
+const NpmStat: React.FC<NpmStatProps> = ({ packageName = 'express' }) => {
     const { isFetching, error } = useQuery(
         ['package', 'downloads', { packageName }],
         () => {
-            return npmService.getDownloads()
+            return npmService.getDownloads(packageName)
         }
     )
+    console.log(error)
     const option = useMemo(() => {
         return {
             xAxis: {

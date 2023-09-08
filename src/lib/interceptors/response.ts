@@ -6,7 +6,7 @@ export default [
     (response: any) => {
         const expireCode = [10000004, 10002002]
         const tokenKey = getAppEnv().VITE_APP_TOKEN_KEY as keyof TokenState
-        if (!response.data.code) {
+        if (response.data?.code === 10000) {
             return response.data.data !== undefined
                 ? response.data.data
                 : response
