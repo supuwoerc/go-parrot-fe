@@ -8,30 +8,34 @@ interface NpmStatProps {
 }
 
 const NpmStat: React.FC<NpmStatProps> = ({ packageName = 'express' }) => {
-    const { isFetching, error } = useQuery(
+    const { isFetching, error, data } = useQuery(
         ['package', 'downloads', { packageName }],
         () => {
             return npmService.getDownloads(packageName)
         }
     )
-    console.log(error)
     const option = useMemo(() => {
-        return {
-            xAxis: {
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'line',
-                    smooth: true
-                }
-            ]
+        if (data) {
+            const { downloads } = data
+            const dates = downloads.map(item => item.day)
+            const counts = downloads.map(item => item.downloads)
+            return {
+                xAxis: {
+                    data: dates
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        data: counts,
+                        type: 'line',
+                        smooth: true
+                    }
+                ]
+            }
         }
-    }, [])
+    }, [data])
     if (isFetching || error) {
         return <ChartLoading text="Parrot" />
     }

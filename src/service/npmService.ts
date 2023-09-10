@@ -1,7 +1,7 @@
 import createRequest from '@/lib/axios'
 
 const getDownloads = (pkg: string) =>
-    createRequest().get('/api/public/npm/downloads', {
+    createRequest().get<NpmDownloads>('/api/public/npm/downloads', {
         params: {
             package: pkg
         }
