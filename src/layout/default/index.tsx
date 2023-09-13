@@ -46,7 +46,7 @@ const DefaultLayout: React.FC = () => {
                     <Content
                         style={{
                             margin: '24px 16px',
-                            padding: 24,
+                            padding: 0,
                             minHeight: 280,
                             overflowX: 'hidden',
                             background: colorBgContainer
