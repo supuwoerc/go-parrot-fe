@@ -1,9 +1,8 @@
 import { css } from '@emotion/react'
+import { flexCenterClass } from './display'
 
 export const errorTipsClass = css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    ${flexCenterClass}
     height: 100%;
     .img {
         width: 300px;

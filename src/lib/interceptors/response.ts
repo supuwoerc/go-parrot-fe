@@ -18,6 +18,7 @@ export default [
         }
     },
     (error: any) => {
-        return Promise.reject(error.message)
+        const message = error?.response?.data?.message ?? error.message
+        return Promise.reject(message)
     }
 ]
