@@ -16,10 +16,9 @@ const npmRoutes: CustomRouteObject[] = [
         element: <Navigate to={'/npm/stat'} />
     },
     {
-        path: '/npm',
         element: <DefaultLayout />,
         meta: {
-            title: 'NPM数据分析',
+            title: '数据分析',
             auth: false
         },
         id: 'root',

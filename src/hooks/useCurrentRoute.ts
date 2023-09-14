@@ -1,13 +1,8 @@
-import { routes } from '@/routes/config'
-import { matchRoutes, useLocation } from 'react-router-dom'
+import useCurrentRoutes from './useCurrentRoutes'
 
 const useCurrentRoute = () => {
-    const location = useLocation()
-    const matchs = matchRoutes(routes, location)
-    if (!matchs) {
-        return null
-    }
-    return matchs[matchs.length - 1]
+    const matchs = useCurrentRoutes()
+    return matchs[matchs.length - 1] ?? null
 }
 
 export default useCurrentRoute

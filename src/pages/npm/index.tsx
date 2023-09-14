@@ -7,6 +7,7 @@ import { useMemo, useState } from 'react'
 import { css } from '@emotion/react'
 import { Form, Input, DatePicker, Button } from 'antd'
 import dayjs from 'dayjs'
+import CommonPage from '@/components/commonPage'
 import { useForm } from 'antd/es/form/Form'
 interface NpmStatProps {}
 export interface FormFilter {
@@ -86,48 +87,50 @@ const NpmStat: React.FC<NpmStatProps> = () => {
         queryClient.invalidateQueries(generateQueryKey(formValues))
     }
     return (
-        <div css={pageContainer}>
-            <Form
-                name="form"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 18 }}
-                initialValues={formValue}
-                autoComplete="off"
-                css={formContainer}
-                form={form}
-            >
-                <Form.Item
-                    name="package"
-                    label="包名"
-                    rules={[{ required: true }]}
+        <CommonPage>
+            <div css={pageContainer}>
+                <Form
+                    name="form"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                    initialValues={formValue}
+                    autoComplete="off"
+                    css={formContainer}
+                    form={form}
                 >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    name="timeRange"
-                    label="时间"
-                    initialValue={[
-                        dayjs(formValue.start),
-                        dayjs(formValue.end)
-                    ]}
-                >
-                    <RangePicker allowClear={false} />
-                </Form.Item>
-                <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-                    <Button type="primary" onClick={formSubmitHandle}>
-                        查询
-                    </Button>
-                </Form.Item>
-            </Form>
-            {isFetching || isError ? (
-                <ChartLoading text="Parrot" />
-            ) : (
-                <ReactECharts
-                    style={{ height: '100%', width: '100%' }}
-                    option={option}
-                />
-            )}
-        </div>
+                    <Form.Item
+                        name="package"
+                        label="包名"
+                        rules={[{ required: true }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="timeRange"
+                        label="时间"
+                        initialValue={[
+                            dayjs(formValue.start),
+                            dayjs(formValue.end)
+                        ]}
+                    >
+                        <RangePicker allowClear={false} />
+                    </Form.Item>
+                    <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+                        <Button type="primary" onClick={formSubmitHandle}>
+                            查询
+                        </Button>
+                    </Form.Item>
+                </Form>
+                {isFetching || isError ? (
+                    <ChartLoading text="Parrot" />
+                ) : (
+                    <ReactECharts
+                        style={{ height: '100%', width: '100%' }}
+                        option={option}
+                    />
+                )}
+            </div>
+        </CommonPage>
     )
 }
 export default NpmStat
