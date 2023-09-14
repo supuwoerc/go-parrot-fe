@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { flexStartClass } from '@/style/display'
 import ChartLoading from '@/components/chart/loading'
 import ReactECharts from 'echarts-for-react'
 import npmService from '@/service/npmService'
@@ -21,15 +20,14 @@ interface FormValue {
 }
 const { RangePicker } = DatePicker
 const pageContainer = css`
-    ${flexStartClass}
     height: 100%;
+    width: 100%;
 `
 const formContainer = css`
     flex-shrink: 0;
     width: 360px;
     padding: 50px 10px 50px 0;
     height: 100%;
-    border-right: 1px solid #ececec;
 `
 
 const NpmStat: React.FC<NpmStatProps> = () => {
@@ -44,13 +42,7 @@ const NpmStat: React.FC<NpmStatProps> = () => {
     }
     const queryKey = generateQueryKey()
     const { isFetching, isError, data } = useQuery(queryKey, () => {
-        return new Promise<any>(resolve => {
-            setTimeout(() => {
-                resolve(true)
-            }, 3000)
-        }).then(() => {
-            return npmService.getDownloads(formValue)
-        })
+        return npmService.getDownloads(formValue)
     })
     const option = useMemo(() => {
         if (data) {
@@ -113,6 +105,20 @@ const NpmStat: React.FC<NpmStatProps> = () => {
                 onClose={onClose}
                 open={open}
                 getContainer={false}
+                maskClosable={false}
+                extra={
+                    <Space>
+                        <Button
+                            onClick={() => {
+                                formSubmitHandle()
+                                onClose()
+                            }}
+                            type="primary"
+                        >
+                            确认
+                        </Button>
+                    </Space>
+                }
             >
                 <Form
                     name="form"
@@ -140,18 +146,12 @@ const NpmStat: React.FC<NpmStatProps> = () => {
                     >
                         <RangePicker allowClear={false} />
                     </Form.Item>
-                    <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-                        <Button type="primary" onClick={formSubmitHandle}>
-                            查询
-                        </Button>
-                    </Form.Item>
                 </Form>
             </Drawer>
             <div css={pageContainer}>
                 {isFetching || isError ? (
                     <ChartLoading text="Parrot" />
                 ) : (
-                    // <span>loading</span>
                     <ReactECharts
                         style={{ height: '100%', width: '100%' }}
                         option={option}
