@@ -2,7 +2,7 @@ import { Layout, theme } from 'antd'
 import { css } from '@emotion/react'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import Siderbar from './components/Sidebar'
-import { Outlet, useLocation } from 'react-router-dom'
+import { useLocation, useOutlet } from 'react-router-dom'
 import CommonHeader from './components/CommonHeader'
 import { GlobalStyles } from '@/components/globalStyles'
 import { useRef } from 'react'
@@ -36,6 +36,7 @@ const DefaultLayout: React.FC = () => {
     } = theme.useToken()
     const location = useLocation()
     const nodeRef = useRef(null)
+    const currentOutlet = useOutlet()
     return (
         <>
             <GlobalStyles />
@@ -54,19 +55,23 @@ const DefaultLayout: React.FC = () => {
                     >
                         <SwitchTransition mode="out-in">
                             <CSSTransition
-                                key={location.key}
+                                key={location.pathname}
+                                nodeRef={nodeRef}
                                 timeout={300}
                                 classNames="fade-slide"
-                                nodeRef={nodeRef}
+                                exit={false}
+                                unmountOnExit
                             >
-                                <div
-                                    css={css`
-                                        height: 100%;
-                                    `}
-                                    ref={nodeRef}
-                                >
-                                    <Outlet />
-                                </div>
+                                {() => (
+                                    <div
+                                        css={css`
+                                            height: 100%;
+                                        `}
+                                        ref={nodeRef}
+                                    >
+                                        {currentOutlet}
+                                    </div>
+                                )}
                             </CSSTransition>
                         </SwitchTransition>
                     </Content>
