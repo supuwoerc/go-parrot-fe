@@ -17,13 +17,13 @@ const CommonPageCss = css`
     height: 100%;
     width: 100%;
     .page-title {
-        height: 60px;
+        height: 65px;
         border-bottom: 1px solid #ececec;
-        padding: 0 20px;
+        padding: 16px 24px;
         ${flexBetweenClass}
     }
     .container {
-        height: calc(100% - 60px);
+        height: calc(100% - 65px);
     }
 `
 function itemRender(

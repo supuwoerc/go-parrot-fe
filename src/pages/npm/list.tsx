@@ -1,143 +1,80 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { flexStartClass } from '@/style/display'
-import ChartLoading from '@/components/chart/loading'
-import ReactECharts from 'echarts-for-react'
-import npmService from '@/service/npmService'
-import { useMemo, useState } from 'react'
-import { css } from '@emotion/react'
-import { Form, Input, DatePicker, Button } from 'antd'
-import dayjs from 'dayjs'
+import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons'
+import React from 'react'
+import { Avatar, List, Space } from 'antd'
 import CommonPage from '@/components/commonPage'
-import { useForm } from 'antd/es/form/Form'
-interface NpmStatProps {}
-export interface FormFilter {
-    package: string
-    start?: string
-    end?: string
-}
-interface FormValue {
-    package: string
-    timeRange?: Array<string>
-}
-const { RangePicker } = DatePicker
-const pageContainer = css`
-    ${flexStartClass}
-    height: 100%;
-`
-const formContainer = css`
-    flex-shrink: 0;
-    width: 360px;
-    padding: 50px 10px 50px 0;
-    height: 100%;
-    border-right: 1px solid #ececec;
-`
 
-const NpmPackageList: React.FC<NpmStatProps> = () => {
-    const [form] = useForm<FormValue>()
-    const [formValue, setFormValue] = useState<FormFilter>({
-        package: 'express',
-        start: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
-        end: dayjs().format('YYYY-MM-DD')
-    })
-    const generateQueryKey = (condition = formValue) => {
-        return ['package', 'downloads', { condition }]
-    }
-    const queryKey = generateQueryKey()
-    const { isFetching, isError, data } = useQuery(queryKey, () => {
-        return new Promise<any>(resolve => {
-            setTimeout(() => {
-                resolve(true)
-            }, 3000)
-        }).then(() => {
-            return npmService.getDownloads(formValue)
-        })
-    })
-    const option = useMemo(() => {
-        if (data) {
-            const { downloads } = data
-            const dates = downloads.map(item => item.day)
-            const counts = downloads.map(item => item.downloads)
-            return {
-                grid: {
-                    x: 100,
-                    y: 50,
-                    x2: 100,
-                    y2: 50
-                },
-                xAxis: {
-                    data: dates
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [
-                    {
-                        data: counts,
-                        type: 'line',
-                        smooth: true
-                    }
-                ]
-            }
-        }
-    }, [data])
-    const queryClient = useQueryClient()
-    const formSubmitHandle = () => {
-        const { package: name, timeRange } = form.getFieldsValue()
-        const [start, end] = timeRange ?? []
-        const formValues = {
-            package: name,
-            start: dayjs(start).format('YYYY-MM-DD'),
-            end: dayjs(end).format('YYYY-MM-DD')
-        }
-        setFormValue(formValues)
-        queryClient.invalidateQueries(generateQueryKey(formValues))
-    }
-    console.log(isFetching || isError)
+const data = Array.from({ length: 23 }).map((_, i) => ({
+    href: 'https://ant.design',
+    title: `ant design part ${i}`,
+    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
+    description:
+        'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+    content:
+        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+}))
+
+const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+    <Space>
+        {React.createElement(icon)}
+        {text}
+    </Space>
+)
+
+const NpmPackageList: React.FC = () => {
     return (
         <CommonPage>
-            <div css={pageContainer}>
-                <Form
-                    name="form"
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 18 }}
-                    initialValues={formValue}
-                    autoComplete="off"
-                    css={formContainer}
-                    form={form}
-                >
-                    <Form.Item
-                        name="package"
-                        label="包名"
-                        rules={[{ required: true }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="timeRange"
-                        label="时间"
-                        initialValue={[
-                            dayjs(formValue.start),
-                            dayjs(formValue.end)
+            <List
+                itemLayout="vertical"
+                size="large"
+                pagination={{
+                    onChange: page => {
+                        console.log(page)
+                    },
+                    pageSize: 3
+                }}
+                dataSource={data}
+                footer={
+                    <div>
+                        <b>ant design</b> footer part
+                    </div>
+                }
+                renderItem={item => (
+                    <List.Item
+                        key={item.title}
+                        actions={[
+                            <IconText
+                                icon={StarOutlined}
+                                text="156"
+                                key="list-vertical-star-o"
+                            />,
+                            <IconText
+                                icon={LikeOutlined}
+                                text="156"
+                                key="list-vertical-like-o"
+                            />,
+                            <IconText
+                                icon={MessageOutlined}
+                                text="2"
+                                key="list-vertical-message"
+                            />
                         ]}
+                        extra={
+                            <img
+                                width={272}
+                                alt="logo"
+                                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                            />
+                        }
                     >
-                        <RangePicker allowClear={false} />
-                    </Form.Item>
-                    <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-                        <Button type="primary" onClick={formSubmitHandle}>
-                            查询
-                        </Button>
-                    </Form.Item>
-                </Form>
-                {isFetching || isError ? (
-                    <ChartLoading text="Parrot" />
-                ) : (
-                    // <span>loading</span>
-                    <ReactECharts
-                        style={{ height: '100%', width: '100%' }}
-                        option={option}
-                    />
+                        <List.Item.Meta
+                            avatar={<Avatar src={item.avatar} />}
+                            title={<a href={item.href}>{item.title}</a>}
+                            description={item.description}
+                        />
+                        {item.content}
+                    </List.Item>
                 )}
-            </div>
+            />
         </CommonPage>
     )
 }

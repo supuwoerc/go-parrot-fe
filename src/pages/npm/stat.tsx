@@ -30,7 +30,7 @@ const formContainer = css`
     height: 100%;
 `
 
-const NpmStat: React.FC<NpmStatProps> = () => {
+const NpmPackageStat: React.FC<NpmStatProps> = () => {
     const [form] = useForm<FormValue>()
     const [formValue, setFormValue] = useState<FormFilter>({
         package: 'express',
@@ -100,7 +100,7 @@ const NpmStat: React.FC<NpmStatProps> = () => {
         >
             <Drawer
                 title="设置数据来源"
-                placement="bottom"
+                placement="top"
                 closable={false}
                 onClose={onClose}
                 open={open}
@@ -161,4 +161,4 @@ const NpmStat: React.FC<NpmStatProps> = () => {
         </CommonPage>
     )
 }
-export default NpmStat
+export default NpmPackageStat
