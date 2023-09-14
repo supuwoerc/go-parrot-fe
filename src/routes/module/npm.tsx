@@ -4,7 +4,8 @@ import { lazy } from 'react'
 import { CustomRouteObject } from '../config'
 import { lazyLoad } from '../lazyLoad'
 
-const NpmStat = lazy(() => import('@/pages/npm/index'))
+const NpmPackageList = lazy(() => import('@/pages/npm/list'))
+const NpmPackageStat = lazy(() => import('@/pages/npm/stat'))
 
 const npmRoutes: CustomRouteObject[] = [
     {
@@ -24,9 +25,14 @@ const npmRoutes: CustomRouteObject[] = [
         id: 'root',
         children: [
             {
+                path: '/npm/packages',
+                meta: { title: '仓库列表', auth: false },
+                element: lazyLoad(NpmPackageList)
+            },
+            {
                 path: '/npm/stat',
                 meta: { title: '仓库下载数据', auth: false },
-                element: lazyLoad(NpmStat)
+                element: lazyLoad(NpmPackageStat)
             }
         ]
     }

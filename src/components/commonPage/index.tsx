@@ -3,13 +3,17 @@ import { flexBetweenClass } from '@/style/display'
 import { css } from '@emotion/react'
 import { Breadcrumb } from 'antd'
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb'
+import { forwardRef } from 'react'
+import { ForwardRefRenderFunction } from 'react'
 import { Link } from 'react-router-dom'
 
 interface CommonPageProps {
     pageTitle?: string
     children?: React.ReactNode
+    extra?: React.ReactNode
 }
 const CommonPageCss = css`
+    position: relative;
     height: 100%;
     width: 100%;
     .page-title {
@@ -35,7 +39,10 @@ function itemRender(
         <Link to={paths.join('/')}>{item.title}</Link>
     )
 }
-const CommonPage: React.FC<CommonPageProps> = ({ pageTitle, children }) => {
+const CommonPage: ForwardRefRenderFunction<HTMLDivElement, CommonPageProps> = (
+    { pageTitle, children, extra },
+    ref
+) => {
     const routes = useCurrentRoutes()
     const metaInfo = routes.map((item, index) => {
         return {
@@ -45,20 +52,23 @@ const CommonPage: React.FC<CommonPageProps> = ({ pageTitle, children }) => {
         }
     })
     return (
-        <div css={CommonPageCss}>
+        <div css={CommonPageCss} ref={ref}>
             <h2 className="page-title">
-                {pageTitle ? (
-                    pageTitle
-                ) : (
-                    <Breadcrumb
-                        items={metaInfo}
-                        itemRender={itemRender}
-                        separator=">"
-                    />
-                )}
+                <div className="left">
+                    {pageTitle ? (
+                        pageTitle
+                    ) : (
+                        <Breadcrumb
+                            items={metaInfo}
+                            itemRender={itemRender}
+                            separator=">"
+                        />
+                    )}
+                </div>
+                {extra && <div className="right">{extra}</div>}
             </h2>
             <div className="container">{children}</div>
         </div>
     )
 }
-export default CommonPage
+export default forwardRef(CommonPage)

@@ -32,7 +32,7 @@ const formContainer = css`
     border-right: 1px solid #ececec;
 `
 
-const NpmStat: React.FC<NpmStatProps> = () => {
+const NpmPackageList: React.FC<NpmStatProps> = () => {
     const [form] = useForm<FormValue>()
     const [formValue, setFormValue] = useState<FormFilter>({
         package: 'express',
@@ -44,7 +44,13 @@ const NpmStat: React.FC<NpmStatProps> = () => {
     }
     const queryKey = generateQueryKey()
     const { isFetching, isError, data } = useQuery(queryKey, () => {
-        return npmService.getDownloads(formValue)
+        return new Promise<any>(resolve => {
+            setTimeout(() => {
+                resolve(true)
+            }, 3000)
+        }).then(() => {
+            return npmService.getDownloads(formValue)
+        })
     })
     const option = useMemo(() => {
         if (data) {
@@ -86,6 +92,7 @@ const NpmStat: React.FC<NpmStatProps> = () => {
         setFormValue(formValues)
         queryClient.invalidateQueries(generateQueryKey(formValues))
     }
+    console.log(isFetching || isError)
     return (
         <CommonPage>
             <div css={pageContainer}>
@@ -124,6 +131,7 @@ const NpmStat: React.FC<NpmStatProps> = () => {
                 {isFetching || isError ? (
                     <ChartLoading text="Parrot" />
                 ) : (
+                    // <span>loading</span>
                     <ReactECharts
                         style={{ height: '100%', width: '100%' }}
                         option={option}
@@ -133,4 +141,4 @@ const NpmStat: React.FC<NpmStatProps> = () => {
         </CommonPage>
     )
 }
-export default NpmStat
+export default NpmPackageList
