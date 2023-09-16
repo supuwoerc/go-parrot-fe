@@ -1,9 +1,11 @@
 import { ReloadOutlined, DeleteOutlined } from '@ant-design/icons'
-import React from 'react'
-import { Avatar, List, Space } from 'antd'
+import React, { useState } from 'react'
+import { Avatar, Button, Input, List, Modal, Space } from 'antd'
 import CommonPage from '@/components/commonPage'
 import { css } from '@emotion/react'
-
+import { useDebounce } from 'ahooks'
+import { useMutation } from '@tanstack/react-query'
+import { message } from '@/providers/message'
 const data = Array.from({ length: 23 }).map((_, i) => ({
     href: 'https://ant.design',
     title: `ant design part ${i}`,
@@ -33,8 +35,46 @@ const IconText = ({ icon, text, hoverClass = 'theme' }: IconTextProps) => (
 )
 
 const NpmPackageList: React.FC = () => {
+    const [open, setOpen] = useState(false)
+    const [confirmLoading, setConfirmLoading] = useState(false)
+    const [packageName, setPackageName] = useState<string>('')
+    const debouncedValue = useDebounce(packageName, { wait: 300 })
+    const fetchPageageInfo = useMutation(
+        (debouncedValue: string) => {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(12345 + debouncedValue)
+                }, 3000)
+            })
+        },
+        {
+            onMutate() {
+                setConfirmLoading(true)
+            },
+            onSuccess(data) {
+                message.success(`${data}`)
+            },
+            onError(error) {
+                message.error(`${error}`)
+            },
+            onSettled() {
+                setConfirmLoading(false)
+            }
+        }
+    )
+    const getPackageInfo = () => {
+        fetchPageageInfo.mutate(debouncedValue)
+    }
     return (
-        <CommonPage>
+        <CommonPage
+            extra={
+                <Space>
+                    <Button type="primary" onClick={() => setOpen(true)}>
+                        添加
+                    </Button>
+                </Space>
+            }
+        >
             <List
                 itemLayout="vertical"
                 size="large"
@@ -68,6 +108,28 @@ const NpmPackageList: React.FC = () => {
                     </List.Item>
                 )}
             />
+            <Modal
+                title="添加仓库"
+                width={380}
+                open={open}
+                onOk={getPackageInfo}
+                onCancel={() => {
+                    setPackageName('')
+                    setOpen(false)
+                }}
+                confirmLoading={confirmLoading}
+                okButtonProps={{
+                    disabled: debouncedValue.trim() === ''
+                }}
+            >
+                <Input
+                    placeholder="请输入仓库名"
+                    value={packageName}
+                    onChange={val => {
+                        setPackageName(val.target.value)
+                    }}
+                />
+            </Modal>
         </CommonPage>
     )
 }
