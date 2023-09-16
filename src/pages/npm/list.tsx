@@ -1,7 +1,8 @@
-import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons'
+import { ReloadOutlined, DeleteOutlined } from '@ant-design/icons'
 import React from 'react'
 import { Avatar, List, Space } from 'antd'
 import CommonPage from '@/components/commonPage'
+import { css } from '@emotion/react'
 
 const data = Array.from({ length: 23 }).map((_, i) => ({
     href: 'https://ant.design',
@@ -12,11 +13,22 @@ const data = Array.from({ length: 23 }).map((_, i) => ({
     content:
         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
 }))
-
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-    <Space>
+interface IconTextProps {
+    icon: React.FC
+    text: string
+    hoverClass?: 'theme' | 'error' | 'warn'
+}
+const IconText = ({ icon, text, hoverClass = 'theme' }: IconTextProps) => (
+    <Space
+        css={css`
+            cursor: pointer;
+            &:hover {
+                color: var(--${hoverClass});
+            }
+        `}
+    >
         {React.createElement(icon)}
-        {text}
+        <span>{text}</span>
     </Space>
 )
 
@@ -27,44 +39,25 @@ const NpmPackageList: React.FC = () => {
                 itemLayout="vertical"
                 size="large"
                 pagination={{
-                    onChange: page => {
-                        console.log(page)
-                    },
                     pageSize: 3
                 }}
                 dataSource={data}
-                footer={
-                    <div>
-                        <b>ant design</b> footer part
-                    </div>
-                }
                 renderItem={item => (
                     <List.Item
                         key={item.title}
                         actions={[
                             <IconText
-                                icon={StarOutlined}
-                                text="156"
+                                icon={ReloadOutlined}
+                                text="同步"
                                 key="list-vertical-star-o"
                             />,
                             <IconText
-                                icon={LikeOutlined}
-                                text="156"
+                                icon={DeleteOutlined}
+                                text="删除"
                                 key="list-vertical-like-o"
-                            />,
-                            <IconText
-                                icon={MessageOutlined}
-                                text="2"
-                                key="list-vertical-message"
+                                hoverClass="error"
                             />
                         ]}
-                        extra={
-                            <img
-                                width={272}
-                                alt="logo"
-                                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                            />
-                        }
                     >
                         <List.Item.Meta
                             avatar={<Avatar src={item.avatar} />}
