@@ -1,8 +1,7 @@
 import { ReloadOutlined, DeleteOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
-import { Avatar, Button, Input, List, Modal, Space } from 'antd'
+import { Avatar, Button, Input, List, Modal, Space, Popconfirm } from 'antd'
 import CommonPage from '@/components/commonPage'
-import { css } from '@emotion/react'
 import { useDebounce } from 'ahooks'
 import { useMutation } from '@tanstack/react-query'
 import { message } from '@/providers/message'
@@ -15,24 +14,6 @@ const data = Array.from({ length: 23 }).map((_, i) => ({
     content:
         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
 }))
-interface IconTextProps {
-    icon: React.FC
-    text: string
-    hoverClass?: 'theme' | 'error' | 'warn'
-}
-const IconText = ({ icon, text, hoverClass = 'theme' }: IconTextProps) => (
-    <Space
-        css={css`
-            cursor: pointer;
-            &:hover {
-                color: var(--${hoverClass});
-            }
-        `}
-    >
-        {React.createElement(icon)}
-        <span>{text}</span>
-    </Space>
-)
 
 const NpmPackageList: React.FC = () => {
     const [open, setOpen] = useState(false)
@@ -65,6 +46,9 @@ const NpmPackageList: React.FC = () => {
     const getPackageInfo = () => {
         fetchPageageInfo.mutate(debouncedValue)
     }
+    const deleteHandle = (item: any) => {
+        console.log('deletehandle', item)
+    }
     return (
         <CommonPage
             extra={
@@ -72,31 +56,45 @@ const NpmPackageList: React.FC = () => {
                     <Button type="primary" onClick={() => setOpen(true)}>
                         添加
                     </Button>
+                    <Button type="primary" onClick={() => setOpen(true)}>
+                        筛选
+                    </Button>
                 </Space>
             }
         >
             <List
-                itemLayout="vertical"
-                size="large"
+                itemLayout="horizontal"
                 pagination={{
-                    pageSize: 3
+                    pageSize: 10
                 }}
                 dataSource={data}
+                style={{ margin: '0 20px 20px' }}
                 renderItem={item => (
                     <List.Item
-                        key={item.title}
                         actions={[
-                            <IconText
-                                icon={ReloadOutlined}
-                                text="同步"
-                                key="list-vertical-star-o"
-                            />,
-                            <IconText
-                                icon={DeleteOutlined}
-                                text="删除"
-                                key="list-vertical-like-o"
-                                hoverClass="error"
-                            />
+                            <Button
+                                key="sync"
+                                type="text"
+                                icon={<ReloadOutlined />}
+                            >
+                                同步
+                            </Button>,
+                            <Popconfirm
+                                key="delete"
+                                title="提示"
+                                description="确认删除该仓库信息?"
+                                onConfirm={() => deleteHandle(item)}
+                                okText="确认"
+                                cancelText="取消"
+                            >
+                                <Button
+                                    type="text"
+                                    danger
+                                    icon={<DeleteOutlined />}
+                                >
+                                    删除
+                                </Button>
+                            </Popconfirm>
                         ]}
                     >
                         <List.Item.Meta
@@ -104,7 +102,6 @@ const NpmPackageList: React.FC = () => {
                             title={<a href={item.href}>{item.title}</a>}
                             description={item.description}
                         />
-                        {item.content}
                     </List.Item>
                 )}
             />

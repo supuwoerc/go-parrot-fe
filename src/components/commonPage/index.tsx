@@ -24,6 +24,7 @@ const CommonPageCss = css`
     }
     .container {
         height: calc(100% - 65px);
+        overflow-y: auto;
     }
 `
 function itemRender(
